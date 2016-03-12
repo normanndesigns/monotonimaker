@@ -4,13 +4,13 @@
     var functionVariable = "x";
     var endCaps = ["infty", -10, "infty", 10];   
 
+    var pngCanvas = document.createElement("canvas");;
+
     $(document).ready(function () {
         handleNulpunkter();
 
-        $('#btnDraw').click(function () {
-            updateMonotoniLinje();
-            return false;
-        });
+        $('#btnDraw').click(updateMonotoniLinje);
+        $('#btnPNG').click(openPNG);
 
         $('.interval').click(changeDRType);
         $('.interval input').change(updateDR);
@@ -32,6 +32,25 @@
         $("#nulpunkterDesc").html(functionVariable + " =");
 
         updateMonotoniLinje();
+    }
+
+    function openPNG() {
+        window.open(pngCanvas.toDataURL("image/png"));
+    }
+
+    function updatePNG() {
+        var svg = document.getElementById("svg");
+        var i = 0;
+        canvg(pngCanvas, new XMLSerializer().serializeToString(svg), {
+            scaleWidth: svg.getAttribute("width") * 2,
+            scaleHeight: svg.getAttribute("height") * 2,
+            forceRedraw: function () {
+                if (i++ < 2) {
+                    return true;
+                }
+                return false;
+            }
+        });
     }
 
     function handleSVGResizer() {
@@ -185,6 +204,7 @@
         }
 
         drawMonotoniLinje(ticks);
+        updatePNG();
     }
 
     function drawMonotoniLinje (ticks) {
@@ -219,7 +239,8 @@
         varNames.attr({
             textAnchor: "end",
             fill: "black",
-            fontStyle: "italic"
+            fontStyle: "italic",
+            fontFamily: "CMU Modern",
         });
         varNames.add(svg.text((step - 5), 40, functionVariable));
         varNames.add(svg.text((step - 5), 70, functionName + ' \'(' + functionVariable + ")"));
@@ -235,6 +256,7 @@
         valueGroup.attr({
             textAnchor: "middle",
             fill: "black",
+            fontFamily: "CMU Modern",
         });
 
         // Add the first point
