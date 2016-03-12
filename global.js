@@ -240,7 +240,7 @@
             textAnchor: "end",
             fill: "black",
             fontStyle: "italic",
-            fontFamily: "CMU Modern",
+            fontFamily: "CMU",
         });
         varNames.add(svg.text((step - 5), 40, functionVariable));
         varNames.add(svg.text((step - 5), 70, functionName + ' \'(' + functionVariable + ")"));
@@ -256,7 +256,7 @@
         valueGroup.attr({
             textAnchor: "middle",
             fill: "black",
-            fontFamily: "CMU Modern",
+            fontFamily: "CMU",
         });
 
         // Add the first point

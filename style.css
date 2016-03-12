@@ -1,3 +1,13 @@
+@font-face {
+    font-family: CMU;
+    src: url(fonts/cmunrm.otf);
+}
+@font-face {
+    font-family: CMU;
+    src: url(fonts/cmunti.otf);
+    font-style: italic;
+}
+
 #nulpunktsContainer {
 	display: inline-block;
 }
