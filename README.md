@@ -1,6 +1,8 @@
 # Monotonimaker
 Program til at tegne monotonilinjer
 
+Programmet kan bruges online på http://alex6480.github.io/monotonimaker
+
 ## Sådan bruger du programmet
 For at lave en monotonilinje skal du først og fremmest indtaste forskriften for den afledede funktion i feltet "Forskrift for den afledede". Monotonimaker anvender math.js. En detaljeret beskrivelse af syntaxen kan ses på http://mathjs.org/docs/expressions/syntax.html. Hvis du ønsker en anden variabel end x, kan det ændres under funktionsnavn, hvor du også kan ændre navnet på funktionen.
 
