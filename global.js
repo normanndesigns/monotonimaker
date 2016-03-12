@@ -18,7 +18,7 @@
         $("#functionName").change(updateFunctionName);
         $("#functionVariable").change(updateFunctionName);
 
-        handleCanvasDragger();
+        handleSVGResizer();
     });
 
     function updateFunctionName() {
@@ -34,9 +34,9 @@
         updateMonotoniLinje();
     }
 
-    function handleCanvasDragger() {
-        var svg = $("#canvas");
-        var drag = $("#canvasDragger");
+    function handleSVGResizer() {
+        var svg = $("#svg");
+        var drag = $("#svgDragger");
         drag.css("left", svg.attr("width") - 5 + "px");
         drag.css("top", svg.attr("height") - 5 + "px");
 
@@ -46,9 +46,9 @@
         });
         $(document).mousemove(function (e) {
             if (dragging) {
-                svg = $("#canvas");
+                svg = $("#svg");
 
-                var parentOffset = $("#canvasContainer").offset();
+                var parentOffset = $("#svgContainer").offset();
                 var mouseX = (e.pageX - parentOffset.left);
                 var mouseY = (e.pageY - parentOffset.top);
 
@@ -188,14 +188,24 @@
     }
 
     function drawMonotoniLinje (ticks) {
-        var svg = $("#canvas");
+        var svg = Snap("#svg");
         var svgWidth = svg.attr("width");
-        svg.empty();
+        svg.clear();
+
+        // Create a group for the thick lines
+        var lineGroup = svg.g();
+        lineGroup.attr({
+            stroke: "#000000",
+            strokeWidth: 2
+        });
 
         // Draw the line itself
         var arrowStart = svgWidth - 14;
-        svg.append('<line x1="0" y1="50" x2="100%" y2="50" style="stroke:black; stroke-width:2" />');
-        svg.append('<polygon points="' + arrowStart + ',45 ' + arrowStart + ',55 ' + (svgWidth - 2) + ',50" style="fill:black;" />')
+        lineGroup.add(svg.line(0, 50, arrowStart + 1, 50));
+        arrowhead = svg.polyline([arrowStart, 45, arrowStart, 55, svgWidth - 2, 50]);
+        arrowhead.attr({
+            fill: "#000000"
+        });
 
         var totalSteps = ticks.length + 2;
         if (endCaps[0] != "infty") totalSteps += 1;
@@ -205,15 +215,27 @@
         var currentStep = 0;
 
         // Add variable names
-        svg.append('<text class="italic" text-anchor="end" x="' + (step - 5) + '" y="40"  fill="black">' + functionVariable + '</text>');
-        svg.append('<text class="italic" text-anchor="end" x="' + (step - 5) + '" y="70"  fill="black">' + functionName + ' \'(' + functionVariable + ')</text>');
-        svg.append('<text class="italic" text-anchor="end" x="' + (step - 5) + '" y="100" fill="black">' + functionName + '(' + functionVariable + ')</text>');
+        var varNames = svg.g();
+        varNames.attr({
+            textAnchor: "end",
+            fill: "black",
+            fontStyle: "italic"
+        });
+        varNames.add(svg.text((step - 5), 40, functionVariable));
+        varNames.add(svg.text((step - 5), 70, functionName + ' \'(' + functionVariable + ")"));
+        varNames.add(svg.text((step - 5), 100, functionName + '(' + functionVariable + ")"));
 
         if (endCaps[0] != "infty") {
             currentStep = 3;
         } else {
             currentStep = 2;
         }
+
+        var valueGroup = svg.g();
+        valueGroup.attr({
+            textAnchor: "middle",
+            fill: "black",
+        });
 
         // Add the first point
         for (var i = 0; i < ticks.length; i++) {
@@ -224,29 +246,29 @@
                 // This point is a zeropoint
 
                 // Draw the x value
-                svg.append('<text text-anchor="middle" x="' + x + '" y="40" fill="black">' + tick[0] + '</text>');
+                valueGroup.add(svg.text(x, 40, tick[0].toString()));
                 // Draw the actual tick
-                svg.append('<line x1="' + x + '" y1="45" x2="' + x + '" y2="55" style="stroke:black; stroke-width:2" />');
+                lineGroup.add(svg.line(x , 45, x, 55));
                 // Draw the derivative value
-                svg.append('<text text-anchor="middle" x="' + x + '" y="70" fill="black">0</text>'); 
+                valueGroup.add(svg.text(x, 70, "0"));
                 
                 // Draw whether it's a local minimum or maximum
                 var type = i > 0 ? (ticks[i - 1][1] > 0 ? '+' : '-') : "/";
                 type += i < ticks.length - 1 ? (ticks[i + 1][1] > 0 ? '+' : '-') : "/";
 
                 if (type == "/-" || type == "+-" || type == "-/" || type == "-+")  {
-                    svg.append('<text text-anchor="middle" x="' + x + '" y="100" fill="black">lok.</text>');
+                    valueGroup.add(svg.text(x, 100, "lok"));
                 }
 
                 if (type == "/-" || type == "+-") {
-                    svg.append('<text text-anchor="middle" x="' + x + '" y="113" fill="black">maks.</text>'); 
+                    valueGroup.add(svg.text(x, 113, "maks.")); 
                 } else if (type == "-/" || type == "-+") {
-                    svg.append('<text text-anchor="middle" x="' + x + '" y="113" fill="black">min.</text>'); 
+                    valueGroup.add(svg.text(x, 113, "min.")); 
                 }
             } else {
                 // This point is not a zeropoint
-                svg.append('<text text-anchor="middle" x="' + x + '" y="70" fill="black">' + (tick[1] > 0 ? "+" : "-") + '</text>');
-                svg.append('<text text-anchor="middle" x="' + x + '" y="100" fill="black">' + (tick[1] > 0 ? "↗" : "↘") + '</text>'); 
+                valueGroup.add(svg.text(x, 70, (tick[1] > 0 ? "+" : "-")));
+                valueGroup.add(svg.text(x, 100, (tick[1] > 0 ? "↗" : "↘"))); 
             }
 
             // Increase the step, so that the next tick gets moved accordingly
@@ -254,39 +276,50 @@
         }
 
         // Draw the definition range
-        drawDR(svg, step, svgWidth);
-        svg.DOMRefresh();
+        drawDR(svg, step, svgWidth, valueGroup, lineGroup);
     }
 
-    function drawDR (svg, step, svgWidth) {
+    function drawDR (svg, step, svgWidth, valueGroup, lineGroup) {
         var $dRl = $($("#dR .interval")[0]);
 
+        // Create the hatches pattern for the unincluded areas of the line
+        var DRPatternLine = svg.line(0, 0, 0, 10);
+        DRPatternLine.attr({
+            stroke: "#000000",
+            strokeWidth: 1
+        });
+        var DRPattern = DRPatternLine.toPattern(0, 0, 10, 10);
+        DRPattern.attr({
+            patternTransform: "rotate(45 0 0)",
+            patternUnits: "userSpaceOnUse"
+        });
+
         if (!$dRl.hasClass("infty")) {
-            svg.append('<line x1="' + step * 2 + '" y1="45" x2="' + step * 2 + '" y2="55" style="stroke:black; stroke-width:2" />');
-            svg.append('<text text-anchor="middle" x="' + step * 2 + '" y="40" fill="black">' + $dRl.find("input").val() + '</text>');
-            svg.append('<rect x="' + step + '" y="50" width="' + step + '" height="100%" fill="url(#diagonalHatch)"/>');
+            lineGroup.add(svg.line(step * 2, 45, step * 2, 55));
+            valueGroup.add(svg.text(step * 2, 40, $dRl.find("input").val()));
+            svg.rect(step, 50, step, "100%").attr({ fill: DRPattern });
         
+            var DRLine = svg.line(step * 2, 50, step * 2, "100%");
             if ($dRl.hasClass("open")) {
-                svg.append('<line x1="' + step * 2 + '" x2="' + step * 2 + '" y1="50" y2="100%" stroke="black" stroke-width="2" stroke-linecap="round" stroke-dasharray="1, 6"/>');
+                DRLine.attr({ stroke: "#000000", strokeWidth: 2, "strokeLinecap": "round", "strokeDasharray": "1, 6"});
             } else {
-                svg.append('<line x1="' + step * 2 + '" x2="' + step * 2 + '" y1="50" y2="100%" stroke="black" stroke-width="2"/>');
+                DRLine.attr({ stroke: "#000000", strokeWidth: 2});
             }
         }
 
         var $dRr = $($("#dR .interval")[1]);
         if (!$dRr.hasClass("infty")) {
-            svg.append('<line x1="' + (svgWidth - step) + '" y1="45" x2="' + (svgWidth - step) + '" y2="55" style="stroke:black; stroke-width:2" />');
-            svg.append('<text text-anchor="middle" x="' + (svgWidth - step) + '" y="40" fill="black">' + $dRr.find("input").val() + '</text>');
-            svg.append('<rect x="' + (svgWidth - step) + '" y="50" width="' + step + '" height="100%" fill="url(#diagonalHatch)"/>');
+            lineGroup.add(svg.line(svgWidth - step, 45, svgWidth - step, 55));
+            valueGroup.add(svg.text(svgWidth - step, 40, $dRr.find("input").val()));
+            svg.rect(svgWidth - step, 50, step, "100%").attr({ fill: DRPattern });
         
+            var DRLine = svg.line(svgWidth - step, 50, svgWidth - step, "100%");
             if ($dRr.hasClass("open")) {
-                svg.append('<line x1="' + (svgWidth - step) + '" x2="' + (svgWidth - step) + '" y1="50" y2="100%" stroke="black" stroke-width="2" stroke-linecap="round" stroke-dasharray="1, 6"/>');
+                DRLine.attr({ stroke: "#000000", strokeWidth: 2, "strokeLinecap": "round", "strokeDasharray": "1, 6"});
             } else {
-                svg.append('<line x1="' + (svgWidth - step) + '" x2="' + (svgWidth - step) + '" y1="50" y2="100%" stroke="black" stroke-width="2"/>');
+                DRLine.attr({ stroke: "#000000", strokeWidth: 2});
             }
         }
-
-        svg.append('<pattern id="diagonalHatch" width="10" height="10" patternTransform="rotate(45 0 0)" patternUnits="userSpaceOnUse"><line x1="0" y1="0" x2="0" y2="10" style="stroke:black; stroke-width:1" /></pattern>')
     }
 
     function evalExpressionAt(x) {

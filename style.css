@@ -79,20 +79,20 @@ a {
 	cursor: pointer;
 }
 
-#canvasContainer:hover #canvas {
+#svgContainer:hover #svg {
 	border: 2px dashed black;
 }
-#canvas {
+#svg {
 	border: 2px solid transparent;
 }
-#canvasContainer:hover #canvasDragger {
+#svgContainer:hover #svgDragger {
 	width: 10px;
 	height: 10px;
 	background-color: black;
 	position: absolute;
 	cursor: pointer;
 }
-#canvasContainer {
+#svgContainer {
 	position: relative;
 	margin-top: 2rem;
 }
