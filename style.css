@@ -8,19 +8,24 @@
     font-style: italic;
 }
 
-#nulpunktsContainer {
+.number-list-container {
 	display: inline-block;
 }
-#nulpunkter input {
+.number-list-input input {
 	border: 0;
 }
-#nulpunkter input:focus {
+.number-list-input input:focus {
 	border: 0;
 	outline: none;
 }
 
 input, svg {
 	font-family: 'Times New Roman', 'Arial', 'Helvetica', serif;
+}
+
+svg .highlight:hover {
+	fill: rgba(52, 152, 219, 0.5);
+	cursor: pointer;
 }
 
 .wrap {
