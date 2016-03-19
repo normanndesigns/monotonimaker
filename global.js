@@ -253,6 +253,8 @@
                 hatchingGroup.add(svg.rect(x - step, 50, 2 * step, "100%").attr({ fill: hatchingPattern }));
             }
         }
+
+        updatePNG();
     }
 
     // Changes the tick to another type
