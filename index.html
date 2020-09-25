@@ -1,16 +1,11 @@
 <!doctype html>
-
 <html lang="en">
 <head>
     <meta charset="utf-8">
 
     <title>Monotonimaker</title>
-    <link rel="stylesheet" href="dependencies/bootstrap/css/bootstrap.min.css">
-    <link rel="stylesheet" href="style.css">
-
-    <!--[if lt IE 9]>
-    <script src="http://html5shiv.googlecode.com/svn/trunk/html5.js"></script>
-    <![endif]-->
+    <link rel="stylesheet" href="assets/bootstrap/css/bootstrap.min.css">
+    <link rel="stylesheet" href="assets/css/style.css">
 </head>
 
 <body>
@@ -48,7 +43,7 @@
                     <label for="forskrift" class="col-sm-3 control-label">Forskrift for den afledede</label>
                     <div class="input-group col-md-9">
                         <span class="input-group-addon" id="forskriftDesc">f'(x) =</span>
-                        <input type="text" class="form-control" id="forskrift" placeholder="Forskriften for den afledede funktion" value="1 + 20 x + 3 x^2">
+                        <input type="text" class="form-control" id="forskrift" placeholder="Forskriften for den afledede funktion" value="-3x^2-6x">
                     </div>
                 </div>
             </div>
@@ -69,15 +64,15 @@
             <button type="button" class="btn btn-primary button" id="btnDraw">Lav monotonilinje</button>
         
             <div id="canvasContainer">
-                <svg id="canvas" width="500" height="120" version="1.1" xmlns="http://www.w3.org/2000/svg" ></svg>
+                <svg id="canvas" width="970" height="120" version="1.1" xmlns="http://www.w3.org/2000/svg" ></svg>
                 <div id="canvasDragger"></div>
             </div>
 
         </div>
     </div>
 
-    <script src="dependencies/jquery-2.2.1.min.js"></script>
-    <script src="dependencies/math.min.js"></script>
-    <script src="global.js"></script>
+    <script src="assets/js/jquery-2.2.1.min.js"></script>
+    <script src="assets/js/math.min.js"></script>
+    <script src="assets/js/global.js"></script>
 </body>
 </html>
