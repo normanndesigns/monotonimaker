@@ -1,0 +1,90 @@
+<!doctype html>
+<html lang="en">
+<head>
+    <meta charset="utf-8">
+
+    <title>Monotonimaker</title>
+    <link rel="stylesheet" href="assets/bootstrap/css/bootstrap.min.css">
+    <link rel="stylesheet" href="assets/css/style.css">
+</head>
+
+<body>
+    <div class="toolbar" style="-webkit-app-region: drag">
+        <ul>
+          <li id="minimizeBTN"></li>
+          <li id="maximizeBTN"></li>
+          <li id="closeBTN"></li>
+        </ul>
+    </div>
+    <div class="global-wrapper">
+        <div class="container wrap">
+            <form class="form-horizontal">
+                <div class="form-group row">
+                    <label  class="col-sm-3 control-label">Funktionsnavn</label>
+                    
+                    <div class="col-md-4">
+                        <div class="form-control">
+                            <input type="text" id="functionName" class='functionInput' value='f'>
+                            <span id="functionVariableContainer">
+                                <input type="text" id="functionVariable" class='functionInput' value='x'>
+                            </span>
+                        </div>
+                    </div>
+    
+                    <div class="col-md-5">
+                        <div class="input-group">
+                            <span id='dMdesc' class="input-group-addon">Dm(f) =</span>
+                            <div class="form-control" id="dR">
+                                <span class="interval left infty">
+                                    <input type="text" value="-10">
+                                </span>,
+                                <span class="interval right infty">
+                                    <input type="text" value="10">
+                                </span>
+                            </div>
+                        </div>
+                    </div>
+                </div>
+    
+                <div class="form-group">
+                    <div class="col-md-12">
+                        <label for="forskrift" class="col-sm-3 control-label">Forskrift for den afledede</label>
+                        <div class="input-group col-md-9">
+                            <span class="input-group-addon" id="forskriftDesc">f'(x) =</span>
+                            <input type="text" class="form-control" id="forskrift" placeholder="Forskriften for den afledede funktion" value="-3x^2-6x">
+                        </div>
+                    </div>
+                </div>
+    
+                <div class="form-group">
+                    <div class="col-md-12">
+                        <label for="nulpunkterInput" class="col-sm-3 control-label">Nulpunkter</label>
+                        <div class="input-group col-md-9">
+                            <span class="input-group-addon" id="nulpunkterDesc">x =</span>
+                            <div class="form-control" id="nulpunkter">
+                                <div id="nulpunktsContainer"></div>
+                                <input type="text" id="nulpunkterInput">
+                            </div>
+                        </div>
+                    </div>
+                </div>
+    
+                
+            
+                <div id="canvasContainer">
+                    <svg id="canvas" width="970" height="120" version="1.1" xmlns="http://www.w3.org/2000/svg" ></svg>
+                    <div id="canvasDragger"></div>
+                </div>
+    
+            </div>
+        </div>
+    </div>
+    <script>if (typeof module === 'object') {window.module = module; module = undefined;}</script>
+
+    <script src="assets/js/jquery-2.2.1.min.js"></script>
+    <script src="assets/js/math.min.js"></script>
+    <script src="assets/js/global.js"></script>
+
+    <script>if (window.module) module = window.module;</script>
+</body>
+</html>
