@@ -1,12 +1,16 @@
+body{
+	overflow: hidden;
+}
 .global-wrapper{
 	position: absolute;
 	width: 100vw;
+	min-height: 100vh;
 	display: flex;
 	flex-direction: column;
 	justify-content: center;
 	align-items: center;
 	box-sizing: border-box;
-	background-color: white;
+	background-color: #F6F6F6;
 }
 .toolbar{
 	display: flex;
