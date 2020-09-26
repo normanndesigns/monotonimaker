@@ -1,0 +1,14 @@
+{
+  "name": "monotonimaker",
+  "version": "1.0.0",
+  "description": "Et tool til hurtigt at lave en monotonilinje",
+  "main": "main.js",
+  "scripts": {
+    "start": "electron ."
+  },
+  "author": "NormannDesigns",
+  "license": "ISC",
+  "devDependencies": {
+    "electron": "^10.1.2"
+  }
+}
