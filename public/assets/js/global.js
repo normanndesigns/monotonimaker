@@ -25,7 +25,8 @@
     function maximizeWindow(){
         var window = remote.getCurrentWindow();
         if(screen.availWidth === window.getSize()[0] && screen.availHeight === window.getSize()[1]){
-            window.setSize(Size[0], Size[1]);
+            window.setPosition((screen.availWidth/2)-(1050/2), (screen.availHeight/2)-(420/2));
+            window.setSize(1050, 420);
         }else{
             Position = [window.getPosition[0], window.getPosition[1]]
             Size = [window.getSize()[0], window.getSize()[1]]
