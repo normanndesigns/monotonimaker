@@ -1,6 +1,9 @@
-const { remote } = require('electron');
-const { BrowserWindow } = remote;
-(function ($, root, undefined) {    
+(function ($, root, undefined) {  
+    const { remote } = require('electron');
+    const dialog = require('electron').remote.dialog
+    const { BrowserWindow } = remote;
+    var fs = require('fs');
+
     var nulpunkter = [];
     var functionName = "f";
     var functionVariable = "x";
@@ -52,9 +55,25 @@ const { BrowserWindow } = remote;
         $("#functionName").change(updateFunctionName);
         $("#functionVariable").change(updateFunctionName);
 
-        handleCanvasDragger();
+        $('#saveBTN').click(saveMonotoniLinje);        
     });
+    function saveMonotoniLinje(){
+        var canvas = document.getElementById('invisCanvas');
+        var context = canvas.getContext('2d');
 
+        const savePath = dialog.showSaveDialogSync({filters: [{ 
+            name: 'Images', extensions: ['png']}],
+            buttonLabel: "Gem", 
+            title: "Gem monotonilinje",
+            defaultPath: '~/Monotonilinje.png'
+        });
+        
+        if(savePath != undefined){
+            var data = canvas.toDataURL("img/png").replace(/^data:image\/\w+;base64,/, "");
+            var buf = Buffer.from(data, 'base64');
+            fs.writeFileSync(savePath, buf);
+        }
+    }
     function updateFunctionName() {
         var fn = $("#functionName");
         var fv = $("#functionVariable");
@@ -68,37 +87,7 @@ const { BrowserWindow } = remote;
         updateMonotoniLinje();
     }
 
-    function handleCanvasDragger() {
-        var svg = $("#canvas");
-        var drag = $("#canvasDragger");
-        drag.css("left", svg.attr("width") - 5 + "px");
-        drag.css("top", svg.attr("height") - 5 + "px");
 
-        var dragging = false;
-        drag.mousedown(function () {
-            dragging = true;
-        });
-        $(document).mousemove(function (e) {
-            if (dragging) {
-                svg = $("#canvas");
-
-                var parentOffset = $("#canvasContainer").offset();
-                var mouseX = (e.pageX - parentOffset.left);
-                var mouseY = (e.pageY - parentOffset.top);
-
-                svg.attr("width", mouseX);
-                svg.attr("height", mouseY);
-
-                drag.css("left", mouseX - 5 + "px");
-                drag.css("top", mouseY - 5 + "px");
-
-                updateMonotoniLinje();
-            }
-        });
-        $(document).mouseup(function () {
-            dragging = false;
-        });
-    }
 
     function handleNulpunkter() {
         $("#nulpunkter").click(function () {
@@ -107,6 +96,9 @@ const { BrowserWindow } = remote;
 
         $("#nulpunkterInput").keydown(function (e) {
             if (e.keyCode == 32) {
+                var canvas = document.getElementById("invisCanvas");
+                const context = canvas.getContext('2d');
+                context.clearRect(0, 0, canvas.width, canvas.height);
                 addNulpunkt();
                 updateMonotoniLinje();
             } else if (e.keyCode == 8) {
@@ -115,6 +107,9 @@ const { BrowserWindow } = remote;
                         nulpunkter.pop().remove();
                     }
                     if(nulpunkter.length != 0){
+                        var canvas = document.getElementById("invisCanvas");
+                        const context = canvas.getContext('2d');
+                        context.clearRect(0, 0, canvas.width, canvas.height);
                         updateMonotoniLinje();
                     }else{
                         $("#canvas").empty();
@@ -126,6 +121,9 @@ const { BrowserWindow } = remote;
 
     // Updates the definition range for the function
     function updateDR() {
+        var canvas = document.getElementById("invisCanvas");
+        const context = canvas.getContext('2d');
+        context.clearRect(0, 0, canvas.width, canvas.height);
         var $dRl = $("#dR .interval.left");
         if ($dRl.hasClass("infty")) {
             endCaps[0] = "infty";
@@ -298,6 +296,26 @@ const { BrowserWindow } = remote;
         // Draw the definition range
         drawDR(svg, step, svgWidth);
         svg.DOMRefresh();
+
+        var svg = document.getElementById("canvas");
+        var serializer = new XMLSerializer();
+        var source = serializer.serializeToString(svg);
+        if(!source.match(/^<svg[^>]+xmlns="http\:\/\/www\.w3\.org\/2000\/svg"/)){
+            source = source.replace(/^<svg/, '<svg xmlns="http://www.w3.org/2000/svg"');
+        }
+        if(!source.match(/^<svg[^>]+"http\:\/\/www\.w3\.org\/1999\/xlink"/)){
+            source = source.replace(/^<svg/, '<svg xmlns:xlink="http://www.w3.org/1999/xlink"');
+        }
+        source = '<?xml version="1.0" standalone="no"?>\r\n' + source;
+        var url = "data:image/svg+xml;charset=utf-8,"+encodeURIComponent(source);
+
+        var can = document.getElementById('invisCanvas');
+        var ctx = can.getContext('2d');
+        var img = new Image();
+        img.onload = function() {
+            ctx.drawImage(img, 0, 0, 970, 135);
+        }
+        img.src = url;
     }
 
     function drawDR (svg, step, svgWidth) {

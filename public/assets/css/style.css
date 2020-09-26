@@ -1,7 +1,6 @@
 .global-wrapper{
 	position: absolute;
 	width: 100vw;
-	height: calc(100vh - 33px);
 	display: flex;
 	flex-direction: column;
 	justify-content: center;
@@ -122,9 +121,6 @@ a {
 	cursor: pointer;
 }
 
-#canvasContainer:hover #canvas {
-	border: 2px dashed black;
-}
 #canvas {
 	border: 2px solid transparent;
 }
