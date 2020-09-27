@@ -1,25 +1,29 @@
 # Monotonimaker
-Program til at tegne monotonilinjer
+![](Monotonimaker.png)
+Et simpelt lille program til at hjælpe med at lave en monotonilinje.
 
-Programmet kan bruges online på http://alex6480.github.io/monotonimaker
 
-## Sådan bruger du programmet
-For at lave en monotonilinje skal du først og fremmest indtaste forskriften for den afledede funktion i feltet "Forskrift for den afledede". Monotonimaker anvender math.js. En detaljeret beskrivelse af syntaxen kan ses på http://mathjs.org/docs/expressions/syntax.html. Hvis du ønsker en anden variabel end x, kan det ændres under funktionsnavn, hvor du også kan ændre navnet på funktionen.
+## Installation
 
-Når forskriften for den afledede er indtastet, kan du indtaste nulpunkter. Programmet kan på nuværende tidspunkt ikke selv finde nulpunkter, så dette skal gøres i hånden eller i et CAS-værktøj. Du indtaster nulpunktet (brug punktum som komma) og trykker mellemrum for at oprette nulpunktet. Det kan slettes igen med backspace eller ved at trykke på det med musen.
+Monotonimaker er bygget [Node.js](https://nodejs.org/) og [Electron](https://www.electronjs.org/).
 
-Du kan indtaste definitionsmængden for funktionen øverst til højre. Tryk på de firkantede parenteser for at skifte. Der er 3 muligheder for både den øvre og den nedre grænse.
+For at køre Monotonimaker så skal man hente repo'et også installere de forskellige moduler.
 
-1. Åbent interval til uendelig
-2. Åbent interval afgrænset af en vilkårlig værdi
-3. Lukket interval afgrænset af en vilkårlig værdi
+```sh
+$ npm install 
+$ npm start
+```
 
-Når alle oplysninger er indtastet, kan du trykke på knappen "Lav monotonilinje", og programmet tegner monotonilinjen for dig.
+Køre man Windows så kan man også hente installeren og installere det som et normal program.
 
-## Brug Monotonimaker offline
-1. Download hele repoet og gem det i en mappe på din computer.
-2. Åben index.html i en webbrowser, og programmet vil nu køre uden, at du behøver adgang til internettet.
+| OS | Installer |
+| ------ | ------ |
+| Windows | [Dropbox](https://www.dropbox.com/s/sa0msu3rzi1m7u2/monotonimaker.zip?dl=0) |
 
-## TODO
-- Intastning af vilkårlige udtryk som funktionsnavn
-- Tillad at man indtaster hvilke intervaller den afledede er større og mindre end nul, frem for at indtaste selve funktionen.
+Ønskes det at bygge installeren selv:
+
+```sh
+$ npm install 
+$ npm run dist
+```
+Også vil installations filerne være i mappen "Dist"
